@@ -13,7 +13,7 @@ object ImportUserLog {
     val ssc = new StreamingContext(sc, Seconds(1))
 
     val lines = ssc.socketTextStream("kudu01", 12345)
-    lines.foreachRDD(rdd => rdd.foreach(x => println(x)))
+    lines.map(_.split(",")).map(x => (x(1), x)).reduceByKey((x, y) => y).map(_._2).foreachRDD(rdd => rdd.foreach(x => println(x(1))))
 
     ssc.start()
 

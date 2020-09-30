@@ -1,4 +1,6 @@
 require 'socket'
+require 'securerandom'
+require 'time'
 
 puts 'Waiting...'
 
@@ -8,8 +10,17 @@ sock = server.accept
 puts 'Accept'
 
 while true do
-	sock.write("Yo\n")
-	sleep(0.5)
+	data = []
+	data <<= Time.now.to_i
+	data << SecureRandom.uuid
+	data << rand(1...1000000000)
+	data << rand(100)
+	str = data.join(',') + "\n"
+
+	sock.write(str)
+	sock.write(str) if rand(10000) == 1
+
+	sleep(0.1)
 end
 
 sock.close()
