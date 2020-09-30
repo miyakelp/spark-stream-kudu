@@ -1,12 +1,13 @@
 name := "import-user-log-sample"
 version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.12.10"
-organization := "jp.gmo"
+organization := "sparksample"
 scalacOptions ++= Seq("-Xlint", "-deprecation", "-unchecked", "-feature")
 updateOptions := updateOptions.value.withCachedResolution(true)
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "3.0.1",
+  "org.apache.spark" %% "spark-streaming" % "3.0.1",
 )
 
 assemblyMergeStrategy in assembly := {
