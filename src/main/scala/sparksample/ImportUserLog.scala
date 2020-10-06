@@ -10,8 +10,6 @@ import org.apache.spark.streaming.StreamingContext._
 import org.apache.kudu.spark.kudu._
 import org.apache.kudu.client._
 
-case class Log(id:String, unixTime:Int, userId:Int, score:Int)
-
 
 object ImportUserLog {
   def main(args: Array[String]): Unit = {
@@ -34,13 +32,13 @@ object ImportUserLog {
 
     val lines = ssc.socketTextStream("kudu01", 12345)
     lines
-      .map(_.split(","))
-      .map(x => (x(1), x))
+      .map(x => {
+        val l = x.split(",")
+        (l(1), l)
+      })
       .reduceByKey((x, y) => y)
       .map(_._2)
       .foreachRDD(rdd => rdd.foreach( x => {
-          //val row = sc.parallelize(Seq(Row(x(1), x(0).toInt, x(2).toInt, x(3).toInt)))
-          //val df = spark.createDataFrame(row, schema)
           val kuduClient = kc.syncClient
           val kuduSession = kuduClient.newSession()
           kuduSession.setFlushMode(SessionConfiguration.FlushMode.AUTO_FLUSH_BACKGROUND)
@@ -55,7 +53,6 @@ object ImportUserLog {
 
           kuduSession.flush()
           kuduSession.close()
-//          kc.insertRows(df, "user_logs")
         })
       )
 
