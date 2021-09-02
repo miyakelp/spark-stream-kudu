@@ -1,6 +1,3 @@
-Blog
-https://recruit.gmo.jp/engineer/jisedai/blog/kudu-sparkstreaming-impala/
-
 Build
 $ java -version
 openjdk version "1.8.0_265"
